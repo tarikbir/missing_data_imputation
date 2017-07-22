@@ -15,7 +15,7 @@ For each code examples below; `imported` is the data set and `i,j` is the found 
 ### Least Squares Data Imputation
 This method imputes the missing data with least squares formula and rewrites the data.
 ```python
-B = np.dot(np.dot(np.linalg.pinv(np.dot(nonZeroT, nonZero)), nonZeroT), tagSet)  # ß'=(Xᵀ.X)^-1.Xᵀ.y
+B = np.dot(np.dot(np.linalg.pinv(np.dot(nonZeroT, nonZero)), nonZeroT), tagSet)  # ß'=(Xᵀ.X)⁺.Xᵀ.y
 ...
 sumB = sum([b*imported[i][idx] for idx, b in enumerate(B) if idx != j])  # Does dot product of B and row, except i, sums all.
 imported[i][j] = abs((tagSet[i] - sumB) / B[index])  # Then solves x for ß'[j].x + sum_of_ß' = y[i]
