@@ -11,11 +11,15 @@ fileNameLoss = fileName+".5loss"  # File name with lost data
 #############
 # Functions #
 #############
+
+
 def printLine():
-    #Function that prints a line.
+    # Function that prints a line.
     print("--------------------------------------------")
+
+
 def elapsed():
-    #Function that calculates elapsed time. Needs init for global tT first.
+    # Function that calculates elapsed time. Needs init for global tT first.
     global tT
     t = abs(tT-timeit.default_timer())
     h = int((t) / 3600)
@@ -23,39 +27,49 @@ def elapsed():
     s = (((t) - 3600 * h) - 60 * m)
     tT = timeit.default_timer()
     return [h,m,s]
+
+
 def findElement(ls,k):
-    #Function to find an element in lists and return its index without generating ValueError.
+    # Function to find an element in lists and return its index without generating ValueError.
     try:
         elm = ls.index(k)
         return elm
     except:
         return None
+
+
 def isfloat(s):
-    #Function to check if value is float. Returns true if castable.
+    # Function to check if value is float. Returns true if castable.
     try:
         float(s)
         return True
     except:
         return False
+
+
 def give_id(v):
-    #Function to give ids to strings. Helps to make numerical calculations easier. Needs global id list and strings list.
-    global id, strings
+    # Function to give ids to strings. Helps to make numerical calculations easier. Needs global id lst and strings lst.
+    global strID, strings
     if v in strings:
         return strings[v]
     else:
-        print("NewID: {:>12s} replaced with id: {:<4d}".format(v, id))
-        strings[v] = id
-        id -= 1  # IDs are negative.
-        return id+1
+        print("NewID: {:>12s} replaced with id: {:<4d}".format(v, strID))
+        strings[v] = strID
+        strID -= 1  # IDs are negative.
+        return strID + 1
+
+
 def get_id(v):
-    #Function that returns the string of the given id.
+    # Function that returns the string of the given id.
     global strings
     return next((st for st, k in strings.items() if k == v), None)
+
+
 def mse():
-    #Function that calculates M S Error.
+    # Function that calculates M S Error.
     total = 0.0
     global original, imported, missing, miss
-    for idx, v in enumerate(missing):
+    for _, v in enumerate(missing):
         i, j = v
         x = imported[i][j]
         y = original[i][j]
@@ -80,7 +94,7 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
     tagListNM = []  # Holds non missing lines' tags at the end of lines (to use in LSE method)
     strings = {}  # Holds strings as ids to rewrite later
     style = []  # Holds input style to output similar to input
-    id = -1  # Initial value of id.
+    strID = -1  # Initial value of id.
     print("Info: Importing file [{}], please wait...".format(fileName))
     for idx, l in enumerate(inputFile):  #TODO: Make importing with numpy to get rid of redundant lists, many useless code and algorithms.
         l = l.replace('\n', '')  # Hardcoded to remove any unnecessary lines in a file.
@@ -204,4 +218,3 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
         t = elapsed()
         print("Info: Output file written in [{:>2d}:{:>2d}:{:>4.1f}]".format(t[0],t[1],t[2]))
         printLine()
-    
