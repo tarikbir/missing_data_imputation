@@ -12,6 +12,7 @@ fileNameLoss = fileName+".5loss"  # File name with lost data
 # Functions #
 #############
 def printLine():
+    #Function that prints a line.
     print("--------------------------------------------")
 def elapsed():
     #Function that calculates elapsed time. Needs init for global tT first.
@@ -124,9 +125,9 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
 ##############
 # Imputation #
 ##############
-    choice = int(input("Method?:\n•Least Square Imputation (1)\n•Naive Bayes Imputation (2)\n•Hot Deck Imputation (3)\n•Most Frequent Element (4)\nSelection:"))
+    choice = int(input("Method?:\n•Least Squares Data Imputation (1)\n•Naive Bayes Imputation (2)\n•Hot Deck Imputation (3)\n•Imputation with Most Frequent Element (4)\nSelection:"))
     print("Info: Imputing process started... This may take a long time...")
-    if choice == 1:  # -------------- Least Square Imputation --------------
+    if choice == 1:  # -------------- Least Squares Data Imputation --------------
         nonZero = dataSetNM[:, ~np.all(dataSetNM == 0, axis=0)]  # Gets non-zero columns
         indexes = np.asarray(np.where(~dataSetNM.any(axis=0))).tolist()[0]  # Gets non-zero column indexes
         nonZeroT = nonZero.transpose()
@@ -168,7 +169,7 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
             lst = [imported[euclidean[r][1]][j] for r in range(kHD)]  # Gets the list of first kHD elements of those values
             imported[i][j] = Counter(lst).most_common(1)[0][0]  # Imputes the most common element from above list.
             print("Info: Imputed", idx + 1, "out of", miss, ":", v, "-> (", imported[i][j], ")")
-    elif choice == 4:  # -------------- Most Frequent Element --------------
+    elif choice == 4:  # -------------- Imputation with Most Frequent Element --------------
         for idx,v in enumerate(missing):
             i,j = v
             currentColumn = [r[j] for r in importedNM]
