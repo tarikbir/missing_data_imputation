@@ -1,10 +1,11 @@
 # Imputation Methods for Missing Data
 
-This is a basic python code to read a dataset, find missing data and apply imputation methods to try to recover some data with some error.
+This is a basic python code to read a dataset, find missing data and apply imputation methods to recover data, with as less error as possible.
 
 ## About
 
-This code is mainly written for a specific data set. Taken a specific route to write it as simple and shorter as possible. Since the debug data set was not very suitable for this kind of code, had to do some hard-codings.
+This code is mainly written for a specific data set. Taken a specific route to write it as simple and shorter as possible. Since the debug data set was not very suitable for this kind of code, there are some necessary hard-codings.
+
 Initialization has only the file name, and the separator used in the file type. Since the debug file was not readable with csv-reader functions, it reads the file as string and seperates it with given separator.
 ```python
 sep = ','  # Separator
