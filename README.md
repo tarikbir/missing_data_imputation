@@ -32,6 +32,8 @@ After importing, there are 4 imputation methods available to use in this code:
 * [Naive Bayes Imputation](#naive-bayes-imputation)
 * [Hot Deck Imputation](#hot-deck-imputation)
 * [Imputation with Most Frequent Element](#imputation-with-most-frequent-element)
+
+
 The program loops every element of `missing` with;
 ```python
 for idx,v in enumerate(missing):
