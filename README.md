@@ -11,11 +11,14 @@ There are 4 imputation methods used in this code (available to select within the
 * [Imputation with Most Frequent Element](#imputation-with-most-frequent-element)
 
 ## Methods
-For each code examples below; `i,j` is the found missing data's index.
+For each code examples below; `imported` is the data set and `i,j` is the found missing data's index.
 ### Least Squares Data Imputation
 This method imputes the missing data with least squares formula and rewrites the data.
 ```python
-B = np.dot(np.dot(np.linalg.pinv(np.dot(nonZeroT, nonZero)), nonZeroT), tagSet)  # The linear formula of LSDI
+B = np.dot(np.dot(np.linalg.pinv(np.dot(nonZeroT, nonZero)), nonZeroT), tagSet)  # ß'=(Xᵀ.X)^-1.Xᵀ.y
+...
+sumB = sum([b*imported[i][idx] for idx, b in enumerate(B) if idx != j])  # Does dot product of B and row, except i, sums all.
+imported[i][j] = abs((tagSet[i] - sumB) / B[index])  # Then solves x for ß'[j].x + sum_of_ß' = y[i]
 ```
 ### Naive Bayes Imputation
 This method uses the Naive Bayes method to impute with frequency, in tandem with tags. Imputes the most frequent element on the column of the missing data with relation to same row's tag.
