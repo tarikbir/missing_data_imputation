@@ -10,7 +10,58 @@ There are 4 imputation methods used in this code (available to select within the
 * [Hot Deck Imputation](#hot-deck-imputation)
 * [Imputation with Most Frequent Element](#imputation-with-most-frequent-element)
 
-## Methods
+## Functions Used
+* elapsed(): Function that calculates elapsed time. Needs initial value for global tT first.
+```python
+global tT
+t = abs(tT-timeit.default_timer())
+h = int((t) / 3600)
+m = int(((t) - 3600 * h) / 60)
+s = (((t) - 3600 * h) - 60 * m)
+tT = timeit.default_timer()
+return [h,m,s]
+```
+* findElement(ls,k): Function to find an element in lists and return its index without generating ValueError.
+```python
+try:
+    elm = ls.index(k)
+    return elm
+except:  # Could also use except ValueError:
+    return None
+```
+* isfloat(s): Function to check if value is float. Returns true if castable.
+```python
+try:
+    float(s)
+    return True
+except:
+    return False
+```
+* give_id(v): Function to give ids to strings. Helps to make numerical calculations easier. Needs global id list and strings list.
+```python
+if v in strings:
+    return strings[v]
+else:
+    strings[v] = strID
+    strID -= 1  # IDs are negative (hardcoded since our data doesn't have negative values)
+    return strID + 1
+```
+* get_id(v): Function that returns the string of the given id. Needs global strings list.
+```python
+return next((st for st, k in strings.items() if k == v), None)
+```
+* mse(): Function that calculates mean squared error.
+```python
+total = 0.0
+for _, v in enumerate(missing):
+    i, j = v
+    x = imported[i][j]
+    y = original[i][j]
+    ...
+    total += abs(x - y) #Adds everything to the grand total
+return math.sqrt(total/miss) #Returns the root of the average
+```
+## Imputation Methods
 For each code examples below; `imported` is the data set and `i,j` is the found missing data's index.
 ### Least Squares Data Imputation
 This method imputes the missing data with least squares formula and rewrites the data.
