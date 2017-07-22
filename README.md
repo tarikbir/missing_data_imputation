@@ -11,16 +11,29 @@ There are 4 imputation methods used in this code (available to select within the
 * [Imputation with Most Frequent Element](#imputation-with-most-frequent-element)
 
 ## Methods
-
+For each code examples below; `i,j` is the found missing data's index.
 ### Least Squares Data Imputation
 This method imputes the missing data with least squares formula and rewrites the data.
 ```python
-if stuff:
-    x = True
+B = np.dot(np.dot(np.linalg.pinv(np.dot(nonZeroT, nonZero)), nonZeroT), tagSet)  # The linear formula of LSDI
 ```
 ### Naive Bayes Imputation
-This method is awesome as hell.
+This method uses the Naive Bayes method to impute with frequency, in tandem with tags. Imputes the most frequent element on the column of the missing data with relation to same row's tag.
+```python
+tagMiss = tagList[i]  # Missing data's tag
+currentColumn = [r[j] for k,r in enumerate(importedNM) if tagListNM[k] == tagMiss]  # Gets the whole column with matching tags.
+imported[i][j] = Counter(currentColumn).most_common(1)[0][0]  # Imputes most common one.
+```
 ### Hot Deck Imputation
-Oh my god look at this superb method.
+This most common method gets the geometric distance of each row to the missing data's row and uses a kHD (default:20) value to determine how many of the most close rows' element should be picked as the most common one. In other words, imputes the geometrically closest rows' most common data.
+```python
+sorted(euclidean, key=lambda l: l[0], reverse=True)  # Sorts the euclidean distance list by their distance value [distance,index]
+lst = [imported[euclidean[r][1]][j] for r in range(kHD)]  # Gets the list of first kHD elements of those values
+imported[i][j] = Counter(lst).most_common(1)[0][0]  # Imputes the most common element from above list.
+```
 ### Imputation with Most Frequent Element
-Wow this method is extraordinary.
+This impractical method is just there to add some spice and allows comparison for other methods' results. It imputes the most common element of that column, regardless of anything else. Fast, but highly unreliable.
+```python
+currentColumn = [r[j] for r in importedNM]
+imported[i][j] = Counter(currentColumn).most_common(1)[0][0]
+```
