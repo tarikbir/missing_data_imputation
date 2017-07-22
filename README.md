@@ -125,3 +125,7 @@ This impractical method is just there to add some spice and allows comparison fo
 currentColumn = [r[j] for r in importedNM]
 imported[i][j] = Counter(currentColumn).most_common(1)[0][0]
 ```
+## Bugs
+[Bug reports](https://github.com/Tharky/missing_data_imputation/issues) and code recommendations are always appreciated.
+
+There is also lots of TODO in the code, I'll get to fixing them later.
