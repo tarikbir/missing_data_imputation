@@ -185,7 +185,7 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
     printLine()
     print("Info: MSE: {:.3f}%".format(mse()))
     printLine()
-    with open(fileNameLoss + ".imputed", 'w', errors='replace') as outputFile:
+    with open(fileName + ".imputed", 'w', errors='replace') as outputFile:
         print("Info: Generating output file...")
         for i in range(row):
             for j in range(col):
