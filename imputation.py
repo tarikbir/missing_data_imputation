@@ -204,3 +204,4 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
         t = elapsed()
         print("Info: Output file written in [{:>2d}:{:>2d}:{:>4.1f}]".format(t[0],t[1],t[2]))
         printLine()
+    
