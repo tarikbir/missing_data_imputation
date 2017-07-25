@@ -10,7 +10,8 @@ Initialization has only the file name, and the separator used in the file type. 
 ```python
 sep = ','  # Separator
 fileName = "kddn"  # File name
-fileNameLoss = fileName+".5loss"  # File name with lost data (Used 5loss because my data was missing 5%
+fileNameLoss = fileName+".5loss"  # File name with lost data (Used 5loss because my data was missing 5%)
+createOutputFile = True
 ```
 File import was done with [with open](https://docs.python.org/3.6/library/functions.html#open) method of python. It reads the file, line by line, then import them properly into a list. If data has strings or anything that can't be converted to float, the program should give it a numerical id to keep things easy to calculate. Then it converts the list into [numpy array](https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.ndarray.html#numpy.ndarray) to make calculations faster. Also, while importing, the program also finds and appends the missing values as indexes, while also generating a non-missing version of the imported file (if the row has a missing data, skip it) which makes calculations easier.
 ```python
@@ -23,7 +24,8 @@ tagList = []  # Holds tags at the end of lines (to exclude them from imputation)
 tagListNM = []  # Holds tags of non-missing lines
 strings = {}  # Holds strings as ids to rewrite later
 style = []  # Holds input style to output similar to input (int/float)
-strID = -1  # Initial value of id.
+strID = 0  # Initial value of id.
+stringColumns = []  # Holds if columns are strings or not
 ...
 tags = Counter(tagList).most_common()  # Holds all tags and counts them
 miss = len(missing)  # How many missing data are there
@@ -46,23 +48,18 @@ line = sep.join(imported[i]) + sep + tagList[i] + '\n'  # Reads the list as a ro
 outputFile.write(line)
 ```
 ## Functions Used
-* elapsed(): Function that calculates elapsed time. Needs initial value for global `tT` first.
+* elapsedStr(): Function that calculates elapsed time and returns it as a string. Needs init for global tT first.
 ```python
-global tT
 t = abs(tT-timeit.default_timer())
-h = int((t) / 3600)
-m = int(((t) - 3600 * h) / 60)
-s = (((t) - 3600 * h) - 60 * m)
+h = int(t / 3600)
+m = int((t - 3600 * h) / 60)
+s = round((t - 3600 * h) - 60 * m)
 tT = timeit.default_timer()
-return [h,m,s]
-```
-* findElement(ls,k): Function to find an element in lists and return its index without generating `ValueError`.
-```python
-try:
-    elm = ls.index(k)
-    return elm
-except:  # Could also use except ValueError:
-    return None
+if h+m+s < 0.1:
+    strT = "[really quick]."
+else:
+    strT = "in [{:>02d}:{:>02d}:{:>02d}].".format(h,m,s)
+return strT
 ```
 * isfloat(s): Function to check if value is `float`. Returns true if castable.
 ```python
@@ -78,11 +75,12 @@ if v in strings:
     return strings[v]
 else:
     strings[v] = strID
-    strID -= 1  # IDs are negative (hardcoded since our data doesn't have negative values)
-    return strID + 1
+    strID += 1
+    return strID-1
 ```
 * get_id(v): Function that returns the string of the given id. Needs global `strings` list.
 ```python
+v=round(v)
 return next((st for st, k in strings.items() if k == v), None)
 ```
 * mse(): Function that calculates mean squared error.
@@ -104,7 +102,7 @@ This method imputes the missing data with least squares formula and rewrites the
 B = np.dot(np.dot(np.linalg.pinv(np.dot(nonZeroT, nonZero)), nonZeroT), tagSet)  # ß'=(Xᵀ.X)⁺.Xᵀ.y
 ...
 sumB = sum([b*imported[i][idx] for idx, b in enumerate(B) if idx != j])  # Does dot product of B and row, except i, sums all.
-imported[i][j] = abs((tagSet[i] - sumB) / B[index])  # Then solves x for ß'[j].x + sum_of_ß' = y[i]
+imported[i][j] = (tagSet[i] - sumB) / B[index]  # Then solves x for ß'[j].x + sum_of_ß' = y[i]
 ```
 ### Naive Bayes Imputation
 This method uses the Naive Bayes method to impute with frequency, in tandem with tags. Imputes the most frequent element on the column of the missing data with relation to same row's tag.
