@@ -54,12 +54,6 @@ t = abs(tT-timeit.default_timer())
 h = int(t / 3600)
 m = int((t - 3600 * h) / 60)
 s = round((t - 3600 * h) - 60 * m)
-tT = timeit.default_timer()
-if h+m+s < 0.1:
-    strT = "[really quick]."
-else:
-    strT = "in [{:>02d}:{:>02d}:{:>02d}].".format(h,m,s)
-return strT
 ```
 * isfloat(s): Function to check if value is `float`. Returns true if castable.
 ```python
