@@ -9,6 +9,7 @@ sep = ','  # Separator
 fileName = "kddn"  # File name
 fileNameLoss = fileName+".5loss"  # File name with lost data
 createOutputFile = True
+calculateMSE = True
 #############
 # Functions #
 #############
@@ -61,7 +62,7 @@ def give_id(v):
 def get_id(v):
     # Function that returns the string of the given id.
     global strings
-    v=round(v)
+    v = round(v)
     return next((st for st, k in strings.items() if k == v), None)
 
 
@@ -84,7 +85,6 @@ def mse():
 ###################
 tT = timeit.default_timer()  # Initialization of elapsed() function.
 with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r', errors='replace') as inputFileOrg:
-    original = []  # Imported original file without missing values
     imported = []  # Imported file as 2d array
     row = 0  # Imported file's rows
     missing = []  # Imported missing data indexes
@@ -101,9 +101,11 @@ with open(fileNameLoss, 'r', errors='replace') as inputFile, open(fileName, 'r',
         l = l.replace('\n', '')  # Hardcoded to remove any unnecessary lines in a file.
         imported.append(l.split(sep))
         row += 1  # Cheap way to get row amount
-    for idx_, l in enumerate(inputFileOrg):
-        l = l.replace('\n', '')  # Hardcoded to remove any unnecessary lines in a file.
-        original.append(l.split(sep))
+    if calculateMSE:
+        original = []  # Imported original file without missing values
+        for idx_, l in enumerate(inputFileOrg):
+            l = l.replace('\n', '')  # Hardcoded to remove any unnecessary lines in a file.
+            original.append(l.split(sep))
 col = len(imported[0]) - 1  # Cheap way to get column amount
 print("Info: File has has {} rows and {} columns.".format(row,col))
 for idx in range(col):  # Get value type (to rewrite later)
@@ -191,8 +193,9 @@ else:
     print("Error: Wrong input. No imputations done.")
 print("Info: Imputed list generated",elapsedStr())
 printLine()
-print("Info: MSE: {:.3f}%".format(mse()))
-printLine()
+if calculateMSE:
+    print("Info: MSE: {:.3f}%".format(mse()))
+    printLine()
 ################
 # File writing #
 ################
