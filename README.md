@@ -6,36 +6,21 @@ This is a basic python code to read a dataset, find missing data and apply imput
 
 This code is mainly written for a specific data set. Taken a specific route to write it as simple and shorter as possible. Since the debug data set was not very suitable for this kind of code, there are some necessary hard-codings.
 
-Initialization has only the file name, and the separator used in the file type. Since the debug file was not readable with csv-reader functions, it reads the file as string and seperates it with given separator.
+Initialization has only the file name, and the separator used in the file type. Since the debug file was not readable with csv-reader functions, it reads the file as string and seperates it with given separator. Below are the imported settings needed to set-up.
 ```python
 sep = ','  # Separator
 fileName = "kddn"  # File name
 fileNameLoss = fileName+".5loss"  # File name with lost data (Used 5loss because my data was missing 5%)
 createOutputFile = True
+calculateMSE = True
 ```
 File import was done with [with open](https://docs.python.org/3.6/library/functions.html#open) method of python. It reads the file, line by line, then import them properly into a list. If data has strings or anything that can't be converted to float, the program should give it a numerical id to keep things easy to calculate. Then it converts the list into [numpy array](https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.ndarray.html#numpy.ndarray) to make calculations faster. Also, while importing, the program also finds and appends the missing values as indexes, while also generating a non-missing version of the imported file (if the row has a missing data, skip it) which makes calculations easier.
-```python
-original = []  # Imported original file without any missing values (this is for calculating mse, this debug file only)
-imported = []  # Imported file as 2d array
-missing = []  # Imported missing data indexes
-importedNM = []  # Imported non-missing array
-importedNM_index = []  # Imported non missing indexes (holds indexes of NM to rewrite later)
-tagList = []  # Holds tags at the end of lines (to exclude them from imputation)
-tagListNM = []  # Holds tags of non-missing lines
-strings = {}  # Holds strings as ids to rewrite later
-style = []  # Holds input style to output similar to input (int/float)
-strID = 0  # Initial value of id.
-stringColumns = []  # Holds if columns are strings or not
-...
-tags = Counter(tagList).most_common()  # Holds all tags and counts them
-miss = len(missing)  # How many missing data are there
-```
+
 After importing, there are 4 imputation methods available to use in this code:
 * [Least Squares Data Imputation](#least-squares-data-imputation)
 * [Naive Bayes Imputation](#naive-bayes-imputation)
 * [Hot Deck Imputation](#hot-deck-imputation)
 * [Imputation with Most Frequent Element](#imputation-with-most-frequent-element)
-
 
 The program loops every element of `missing` with;
 ```python
@@ -43,10 +28,7 @@ for idx,v in enumerate(missing):
     i,j = v  # Gets the index of missing element
 ```
 And imputes each element with the methods below. After every missing data gets imputed, it calculates the [Mean Squared Error](https://en.wikipedia.org/wiki/Mean_squared_error) and prints it out. Then starts writing the file.
-```python
-line = sep.join(imported[i]) + sep + tagList[i] + '\n'  # Reads the list as a row, adds the tag at the end, ends the line.
-outputFile.write(line)
-```
+
 ## Functions Used
 * elapsedStr(): Function that calculates elapsed time and returns it as a string. Needs init for global tT first.
 ```python
